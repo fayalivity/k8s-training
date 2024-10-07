@@ -1,0 +1,56 @@
+# Creating cluster
+wget https://raw.githubusercontent.com/projectcalico/calico/master/manifests/calico.yaml
+kubeadm config print init-defaults | tee ClusterConfiguration.yaml
+[...]
+
+cat <<EOF | cat >> ClusterConfiguration.yaml
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
+EOF
+
+[...]
+
+# delete cluster if errors
+sudo kubeadm reset
+sudo systemctl restart kubelet
+
+# deploy master
+vi ClusterConfiguration.yaml # replace '-name: node' by 'instance name' + -clustername
+sudo kubeadm init --config=ClusterConfiguration.yaml
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f calico.yaml
+kubectl get pods --all-namespaces
+kubectl get pods --all-namespaces --watch
+kubectl get pods --all-namespaces
+kubectl get nodes
+sudo systemctl status kubelet.service
+ls /etc/kubernetes/manifests/
+sudo systemctl status kubelet.service
+sudo more /etc/kubernetes/manifests/etcd.yaml
+sudo more /etc/kubernetes/manifests/kube-apiserver.yaml
+
+kubeadm token list
+kubeadm token create
+# aqb87v.xjizhrgqgztcyh6s
+# 6e8at0.ny6jh4qbrj8t0p2x
+
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+# b1a121333a6065e01f2006166fe1a04ec683311e82b7691f2204179c787c6d52
+# dd4da89eb9dea9a2d750f571c5c5d9a744bed8b78b55db4665ea60cc3ffeab0d
+
+kubeadm token create --print-join-command
+# kubeadm join 192.168.1.56:6443 --token 0ja67v.w58c0hvkx4u8z2p5 --discovery-token-ca-cert-hash sha256:b1a121333a6065e01f2006166fe1a04ec683311e82b7691f2204179c787c6d52
+# RETURN TO NODE
+
+sudo kubeadm join 192.168.1.56:6443 --token n8mbjw.nwa61zkowacadktq --discovery-token-ca-cert-hash sha256:54a22347f008e6159410023eb430c7f72c6f49ce423d16f65eb09b42ac72be66
+
+# BACK TO MASTER
+kubectl get nodes
+kubectl get pods --all-namespaces --watch
+kubectl get nodes
