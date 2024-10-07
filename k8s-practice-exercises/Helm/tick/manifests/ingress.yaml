@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tick
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: telegraf.tick.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: telegraf
+                port:
+                  number: 8186
+    - host: chronograf.tick.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chronograf
+                port:
+                  number: 8888

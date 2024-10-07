@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kapacitor
+spec:
+  selector:
+    matchLabels:
+      app: kapacitor
+  template:
+    metadata:
+      labels:
+        app: kapacitor
+    spec:
+      containers:
+      - name: kapacitor
+        image: kapacitor:1.5
+        env:
+        - name: KAPACITOR_INFLUXDB_0_URLS_0
+          value: http://influxdb:8086

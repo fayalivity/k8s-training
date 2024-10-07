@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - image: logstash:6.6.0
+        name: logstash
+        volumeMounts:
+        - mountPath: /config/logstash.conf
+          name: config
+        command:
+        - "logstash"
+        - "-f"
+        - "/config/logstash.conf"
+      volumes:
+      - name: config
+        configMap:
+          name: logstash-config

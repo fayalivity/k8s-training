@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: telegraf
+spec:
+  selector:
+    app: telegraf
+  ports:
+  - name: telegraf
+    port: 8186
+    targetPort: 8186
