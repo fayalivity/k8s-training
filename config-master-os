@@ -30,14 +30,10 @@ sudo vi /etc/containerd/config.toml
 
 sudo systemctl restart containerd
 
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo bash -c 'cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
-deb https://apt.kubernetes.io/ kubernetes-xenial main
-EOF'
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt update
 apt-cache policy kubelet | head -n 20
-VERSION=1.27.1-00
-sudo apt install -y kubelet=$VERSION kubeadm=$VERSION kubectl=$VERSION
+sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl containerd
 
 sudo systemctl status kubelet.service
