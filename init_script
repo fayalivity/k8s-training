@@ -36,6 +36,9 @@ apt-mark hold kubelet kubeadm kubectl containerd
 
 sudo systemctl enable kubelet.service
 sudo systemctl enable containerd.service
+modprobe br_netfilter
+echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
+echo 1 > /proc/sys/net/ipv4/ip_forward
 
 # Depuis le master
 kubeadm init
