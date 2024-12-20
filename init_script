@@ -37,5 +37,14 @@ apt-mark hold kubelet kubeadm kubectl containerd
 sudo systemctl enable kubelet.service
 sudo systemctl enable containerd.service
 
+# Depuis le master
+kubeadm init
+
+# Récupérer la commande kubeadm join en sortie de kubeadm init puis lancez la sur le node
+kubeadm join .....
+
+# Depuis le master, lancez les commandes suivantes
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 # Creating cluster
 wget https://docs.projectcalico.org/manifests/calico.yaml
