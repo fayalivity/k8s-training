@@ -1,8 +1,5 @@
 # Install master node V1.27.0
 sudo swapoff -a
-sudo vi /etc/fstab
-reboot
-# comment swap line with #
 
 sudo modprobe overlay
 sudo modprobe br_netfilter
@@ -41,4 +38,5 @@ sudo systemctl status containerd.service
 
 sudo systemctl enable kubelet.service
 sudo systemctl enable containerd.service
+
 
