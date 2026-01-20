@@ -25,8 +25,7 @@ sudo apt-get install -y containerd
 sudo mkdir -p /etc/containerd
 sudo containerd config default | sudo tee /etc/containerd/config.toml
 
-sudo vi /etc/containerd/config.toml
-# search with /SystemdCgroup and set parameter to true
+sudo sed -i 's/^SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 
 sudo systemctl restart containerd
 
@@ -42,3 +41,4 @@ sudo systemctl status containerd.service
 
 sudo systemctl enable kubelet.service
 sudo systemctl enable containerd.service
+
